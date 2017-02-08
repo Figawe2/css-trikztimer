@@ -1,4 +1,6 @@
 # css-trikztimer
+This is an advanced timer, but super bad coded. There might be bugs, I'm working one for Source-python.
+
 Timer plugin for Trikz written for eventscripts
 
 Extra the files to your folder /eventscripts/
