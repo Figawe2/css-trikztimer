@@ -25,8 +25,10 @@ Requirements
 
 You must have Source Python Extensions installed!
 Can be downloaded here
+
 http://forums.eventscripts.com/viewtopic.php?f=125&t=46657&sid=9d38a52bac92f2a45867d466c7212ec7
 
 SPE Tools are required aswell, can be downloaded here:
+
 http://forums.eventscripts.com/viewtopic.php?f=125&t=44753&sid=9d38a52bac92f2a45867d466c7212ec7
 
