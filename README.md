@@ -5,8 +5,9 @@ Extra the files to your folder /eventscripts/
 
 Put this in ur autoexec.cfg or server.cfg
 
-
+```
 plugin_load "addons/sp_extensions_ep2"
+
 es_load trikztimer
 es_load trikztimer/mysql
 es_load trikztimer/threaded_mysql
@@ -17,7 +18,7 @@ es_load trikztimer/plugins/ljstats
 es_load trikztimer/plugins/clantag
 es_load trikztimer/plugins/anticheat
 es_load trikztimer/plugins/radio
-
+```
 
 Requirements
 =========
