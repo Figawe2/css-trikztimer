@@ -23,7 +23,7 @@ timer_plugin = True
 
 def load_client_pref():
     global client
-    dictPath = os.path.join(es.getAddonPath("trikztimer"), "/database/clientpref_trikz.db")
+    dictPath = os.path.join(es.getAddonPath("queue_timer"), "/database/clientpref_trikz.db")
     if os.path.isfile(dictPath):
         fileStream = open(dictPath, 'rb')
         client = pickle.load(fileStream)
@@ -31,7 +31,7 @@ def load_client_pref():
 
 
 def save_client_pref():
-    dictPath = os.path.join(es.getAddonPath("trikztimer"), "database/clientpref_trikz.db")
+    dictPath = os.path.join(es.getAddonPath("queue_timer"), "database/clientpref_trikz.db")
     fileStream = open(dictPath, 'wb')
     pickle.dump(client, fileStream)
     fileStream.close()
@@ -339,7 +339,7 @@ def commands(userid):
 def trikz_menu_select(userid, choice, popupid):
     steamid = es.getplayersteamid(userid)
     player = playerlib.getPlayer(userid)
-    timer = es.import_addon("trikztimer/plugins/timer")
+    timer = es.import_addon("queue_timer/plugins/timer")
     """
     if int(choice) == 1:
         if player.getFB() in (0, 1):
@@ -406,7 +406,7 @@ def trikz_menu_select(userid, choice, popupid):
 def development(userid):
     steamid = es.getplayersteamid(userid)
     QueueAPI.Validate(userid, 0)
-    timer = es.import_addon("trikztimer/plugins/timer")
+    timer = es.import_addon("queue_timer/plugins/timer")
     player = playerlib.getPlayer(userid)
     timer.player[steamid]["disabled"] = 1
     info = popuplib.create('development')
@@ -432,7 +432,7 @@ def development(userid):
 def development_select(userid, choice, popupid):
     steamid = es.getplayersteamid(userid)
     player = playerlib.getPlayer(userid)
-    timer = es.import_addon("trikztimer/plugins/timer")
+    timer = es.import_addon("queue_timer/plugins/timer")
     if int(choice) == 1:
         if client[steamid]["esp"] == "Off":
             esc.tell(userid,
@@ -536,7 +536,7 @@ def drawbox(userid, loop_number, start_point, type, end_point=None):
 
 def sm2es_keyPress(ev):
     userid = ev["userid"]
-    timer = es.import_addon("trikztimer/plugins/timer")
+    timer = es.import_addon("queue_timer/plugins/timer")
     if es.exists("userid", userid):
 
         if ev['status'] == '0':
@@ -601,7 +601,7 @@ def sm2es_keyPress(ev):
 
 def cp_menu(userid):
     steamid = es.getplayersteamid(userid)
-    timer = es.import_addon("trikztimer/plugins/timer")
+    timer = es.import_addon("queue_timer/plugins/timer")
     QueueAPI.Validate(userid, 0)
     info = popuplib.create('checkpoint_menu')
     info.addline('Checkpoints')
@@ -664,7 +664,7 @@ def cp_menu_select(userid, choice, popupid):
     velocity_x = float(es.getplayerprop(userid, 'CBasePlayer.localdata.m_vecVelocity[0]'))
     velocity_y = float(es.getplayerprop(userid, 'CBasePlayer.localdata.m_vecVelocity[1]'))
     velocity_z = float(es.getplayerprop(userid, 'CBasePlayer.localdata.m_vecVelocity[2]'))
-    timer = es.import_addon("trikztimer/plugins/timer")
+    timer = es.import_addon("queue_timer/plugins/timer")
     if timer.CheckPartner(userid):
         timer_id = timer.player[steamid]["timer_id"]
         state = timer.timer[timer_id]["state"]
@@ -945,7 +945,7 @@ def tp_menu(userid):
     info.c_beginsep = " "
     info.c_pagesep = " "
     for userid_2 in es.getUseridList():
-		if not es.isbot(userid):
+		if not es.isbot(userid_2):
 			if userid == userid_2:
 				name = es.getplayername(userid_2)
 
@@ -958,7 +958,7 @@ def tp_menu(userid):
 
 
 def tp_menu_select(userid, choice, popupid):
-    timer = es.import_addon("trikztimer/plugins/timer")
+    timer = es.import_addon("queue_timer/plugins/timer")
     steamid = es.getplayersteamid(choice)
     if not timer.CheckPartner(userid):
         # if es.getplayerprop(userid, "CCSPlayer.baseclass.localdata.m_hGroundEntity") != -1:
@@ -980,7 +980,7 @@ def tp_accept(userid, text, steamid, name):
     if client[steamid]["tp_accept"] == 1:
 
         if timer_plugin:
-            timer = es.import_addon('trikztimer/plugins/timer')
+            timer = es.import_addon('queue_timer/plugins/timer')
             timer.TimerSolo_Stop(userid)
             timer.TimerPartner_Stop(userid)
 
