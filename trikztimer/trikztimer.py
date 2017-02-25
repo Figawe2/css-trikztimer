@@ -944,7 +944,7 @@ def tp_menu(userid):
     info.c_beginsep = " "
     info.c_pagesep = " "
     for userid_2 in es.getUseridList():
-		if not es.isbot(userid):
+		if not es.isbot(userid_2):
 			if userid == userid_2:
 				name = es.getplayername(userid_2)
 
