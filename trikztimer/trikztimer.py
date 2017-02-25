@@ -23,7 +23,7 @@ timer_plugin = True
 
 def load_client_pref():
     global client
-    dictPath = os.path.join(es.getAddonPath("trikztimer"), "/database/clientpref_trikz.db")
+    dictPath = os.path.join(es.getAddonPath("queue_timer"), "/database/clientpref_trikz.db")
     if os.path.isfile(dictPath):
         fileStream = open(dictPath, 'rb')
         client = pickle.load(fileStream)
@@ -31,7 +31,7 @@ def load_client_pref():
 
 
 def save_client_pref():
-    dictPath = os.path.join(es.getAddonPath("trikztimer"), "database/clientpref_trikz.db")
+    dictPath = os.path.join(es.getAddonPath("queue_timer"), "database/clientpref_trikz.db")
     fileStream = open(dictPath, 'wb')
     pickle.dump(client, fileStream)
     fileStream.close()
@@ -84,11 +84,11 @@ class QueueExtendTrikz(object):
                                'save_speed_stack_2': 0}
             if message == 1:
                 esc.tell(userid,
-                         '#0,167,255[ #0,137,255Trikz #0,167,255] #snowCorrupt data has been found and has been restored!')
+                         '#124,252,0[ Trikz] #snowCorrupt data has been found and has been restored!')
         else:
             if message == 1:
                 esc.tell(userid,
-                         '#0,167,255[ #0,137,255Trikz #0,167,255] #snowThis is a validation check. If you get this message you are all set.')
+                         '#124,252,0[ Trikz] #snowThis is a validation check. If you get this message you are all set.')
 
     def Intro_menu(self, userid):
         info = popuplib.create('intro_menu')
@@ -194,27 +194,27 @@ def get_usp(userid, text, steamid, name):
     player = playerlib.getPlayer(userid)
     if not player.isdead:
         if not client[steamid]["spam"] > 3:
-            esc.tell(userid, '#0,167,255[ #0,137,255Trikz #0,167,255] #snowYou have received an #yellowUSP.')
+            esc.tell(userid, '#124,252,0[ Trikz] #snowYou have received an #yellowUSP.')
             es.server.queuecmd('es_xgive %s weapon_usp' % userid)
             client[steamid]["spam"] += 1
         else:
-            esc.tell(userid, '#0,167,255[ #0,137,255Trikz #0,167,255] #snowStop spamming the command #yellow%s' % text)
+            esc.tell(userid, '#124,252,0[ Trikz] #snowStop spamming the command #yellow%s' % text)
 
 
 def get_glock(userid, text, steamid, name):
     player = playerlib.getPlayer(userid)
     if not player.isdead:
         if not client[steamid]["spam"] > 3:
-            esc.tell(userid, '#0,167,255[ #0,137,255Trikz #0,167,255] #snowYou have received an #yellowGlock.')
+            esc.tell(userid, '#124,252,0[ Trikz] #snowYou have received an #yellowGlock.')
             es.server.queuecmd('es_xgive %s weapon_glock' % userid)
             client[steamid]["spam"] += 1
         else:
-            esc.tell(userid, '#0,167,255[ #0,137,255Trikz #0,167,255] #snowStop spamming the command #yellow%s' % text)
+            esc.tell(userid, '#124,252,0[ Trikz] #snowStop spamming the command #yellow%s' % text)
 
 
 def change_spec(userid):
     es.server.queuecmd('es_xchangeteam %i 1' % int(userid))
-    esc.tell(userid, "#0,167,255[ #0,137,255Trikz #0,167,255] #snowYou've been sent to #yellowspectator!")
+    esc.tell(userid, "#124,252,0[ Trikz] #snowYou've been sent to #yellowspectator!")
 
 
 def antispam():
@@ -240,7 +240,7 @@ def player_spawn(ev):
         QueueAPI.Validate(userid, 0)
         if not interp == "0":
             esc.tell(userid,
-                     "#0,167,255[ #0,137,255Trikz #0,167,255] #snowYou lerp is not optimal, do #yellow'cl_interp 0' #snowin console")
+                     "#124,252,0[ Trikz] #snowYou lerp is not optimal, do #yellow'cl_interp 0' #snowin console")
 
 
 def auto_switch(userid):
@@ -265,7 +265,7 @@ def trikz_menu(userid, text=None, steamid=None, name=None):
     QueueAPI.Validate(userid, 0)
     steamid = es.getplayersteamid(userid)
     info = popuplib.create('trikz_menu')
-    info.addline('Trikz menu')
+    info.addline('[ DreamAboutNow ]')
     info.addline(' ')
     if client[steamid]["auto_switch"] == "On":
         info.addline('->1. Auto Switch: On')
@@ -288,7 +288,6 @@ def trikz_menu(userid, text=None, steamid=None, name=None):
         info.addline('->4. Blocking: On')
     info.addline(' ')
     info.addline('->5. Checkpoints')
-    info.addline('->6. Delay')
     info.addline(' ')
     info.addline('0. Exit')
     info.enablekeys = "12345680"
@@ -339,32 +338,32 @@ def commands(userid):
 def trikz_menu_select(userid, choice, popupid):
     steamid = es.getplayersteamid(userid)
     player = playerlib.getPlayer(userid)
-    timer = es.import_addon("trikztimer/plugins/timer")
+    timer = es.import_addon("queue_timer/plugins/timer")
     """
     if int(choice) == 1:
         if player.getFB() in (0, 1):
             client[steamid]['auto_flash'] = "On"
-            esc.tell(userid, '#0,167,255[ #0,137,255Trikz #0,167,255] #snowYou got a #yellowrefill #245,61,0flash')
+            esc.tell(userid, '#124,252,0[ Trikz] #snowYou got a #yellowrefill #245,61,0flash')
         trikz_menu(userid)
 
     if int(choice) == 1:
         if not client[steamid]['auto_flash'] == "On":
             client[steamid]['auto_flash'] = "On"
             auto_switch(userid)
-            esc.tell(userid, '#0,167,255[ #0,137,255Trikz #0,167,255] #245,61,0AutoFlash#snow is now #yellowON')
+            esc.tell(userid, '#124,252,0[ Trikz] #245,61,0AutoFlash#snow is now #yellowON')
         else:
             client[steamid]['auto_flash'] = "Off"
             auto_switch(userid)
-            esc.tell(userid, '#0,167,255[ #0,137,255Trikz #0,167,255] #245,61,0AutoFlash#snow is now #yellowOFF')
+            esc.tell(userid, '#124,252,0[ Trikz] #245,61,0AutoFlash#snow is now #yellowOFF')
         trikz_menu(userid)
     """
     if int(choice) == 1:
         if not client[steamid]['auto_switch'] == "On":
             client[steamid]['auto_switch'] = "On"
-            esc.tell(userid, '#0,167,255[ #0,137,255Trikz #0,167,255] #245,61,0AutoSwitch#snow is now #yellowON')
+            esc.tell(userid, '#124,252,0[ Trikz] #245,61,0AutoSwitch#snow is now #yellowON')
         else:
             client[steamid]['auto_switch'] = "Off"
-            esc.tell(userid, '#0,167,255[ #0,137,255Trikz #0,167,255] #245,61,0AutoSwitch#snow is now #yellowOFF')
+            esc.tell(userid, '#124,252,0[ Trikz] #245,61,0AutoSwitch#snow is now #yellowOFF')
         trikz_menu(userid)
 
     if int(choice) == 2:
@@ -381,13 +380,13 @@ def trikz_menu_select(userid, choice, popupid):
 
         if client[steamid]['auto_stuck'] == "Off":
             esc.tell(userid,
-                     '#0,167,255[ #0,137,255Trikz #0,167,255] #245,61,0Anti-Stuck #snowis now #yellowON')
+                     '#124,252,0[Trikz] #245,61,0Anti-Stuck #snowis now #yellowON')
             client[steamid]['auto_stuck'] = "On"
             gamethread.cancelDelayed("auto_stuck_%s" % userid)
             auto_stuck(userid)
         else:
             esc.tell(userid,
-                     '#0,167,255[ #0,137,255Trikz #0,167,255] #245,61,0Anti-Stuck #snowis now #yellowOFF #255,0,0(NOT Recommended)')
+                     '#124,252,0[ Trikz] #245,61,0Anti-Stuck #snowis now #yellowOFF #255,0,0(NOT Recommended)')
             client[steamid]['auto_stuck'] = "Off"
             gamethread.cancelDelayed("auto_stuck_%s" % userid)
         trikz_menu(userid)
@@ -406,7 +405,7 @@ def trikz_menu_select(userid, choice, popupid):
 def development(userid):
     steamid = es.getplayersteamid(userid)
     QueueAPI.Validate(userid, 0)
-    timer = es.import_addon("trikztimer/plugins/timer")
+    timer = es.import_addon("queue_timer/plugins/timer")
     player = playerlib.getPlayer(userid)
     timer.player[steamid]["disabled"] = 1
     info = popuplib.create('development')
@@ -432,7 +431,7 @@ def development(userid):
 def development_select(userid, choice, popupid):
     steamid = es.getplayersteamid(userid)
     player = playerlib.getPlayer(userid)
-    timer = es.import_addon("trikztimer/plugins/timer")
+    timer = es.import_addon("queue_timer/plugins/timer")
     if int(choice) == 1:
         if client[steamid]["esp"] == "Off":
             esc.tell(userid,
@@ -456,16 +455,16 @@ def development_select(userid, choice, popupid):
                     return
                 else:
                     esc.tell(userid,
-                             '#0,167,255[ #0,137,255Trikz #0,167,255] #245,61,0Perfect Strafe synchronization #snowis now #yellowON')
+                             '#124,252,0[ Trikz] #245,61,0Perfect Strafe synchronization #snowis now #yellowON')
                     client[steamid]['strafe_sync'] = "On"
             else:
                 esc.tell(userid,
-                         '#0,167,255[ #0,137,255Trikz #0,167,255] #245,61,0Perfect Strafe synchronization #snowis now #yellowON')
+                         '#124,252,0[ Trikz] #245,61,0Perfect Strafe synchronization #snowis now #yellowON')
                 client[steamid]['strafe_sync'] = "On"
 
         else:
             esc.tell(userid,
-                     '#0,167,255[ #0,137,255Trikz #0,167,255] #245,61,0Perfect Strafe synchronization #snowis now #yellowOFF')
+                     '#124,252,0[ Trikz] #245,61,0Perfect Strafe synchronization #snowis now #yellowOFF')
             client[steamid]['strafe_sync'] = "Off"
     if int(choice) in (1, 2, 3, 4, 5, 6):
         development(userid)
@@ -536,7 +535,7 @@ def drawbox(userid, loop_number, start_point, type, end_point=None):
 
 def sm2es_keyPress(ev):
     userid = ev["userid"]
-    timer = es.import_addon("trikztimer/plugins/timer")
+    timer = es.import_addon("queue_timer/plugins/timer")
     if es.exists("userid", userid):
 
         if ev['status'] == '0':
@@ -601,7 +600,7 @@ def sm2es_keyPress(ev):
 
 def cp_menu(userid):
     steamid = es.getplayersteamid(userid)
-    timer = es.import_addon("trikztimer/plugins/timer")
+    timer = es.import_addon("queue_timer/plugins/timer")
     QueueAPI.Validate(userid, 0)
     info = popuplib.create('checkpoint_menu')
     info.addline('Checkpoints')
@@ -643,7 +642,7 @@ def set_boost(userid, cp):
         es.setplayerprop(userid, "CBasePlayer.localdata.m_vecBaseVelocity", myNewVector2)
         if client[steamid]["save_speed_stack"] > 1:
             esc.tell(userid,
-                     "#0,167,255[ #0,137,255Trikz #0,167,255] #245,0,61Speed has now been stacked (multiplier X%s" %
+                     "#124,252,0[ Trikz] #245,0,61Speed has now been stacked (multiplier X%s" %
                      client[steamid]["save_speed_stack"])
         client[steamid]["save_speed_stack"] -= 1
     else:
@@ -654,7 +653,7 @@ def set_boost(userid, cp):
         es.setplayerprop(userid, "CBasePlayer.localdata.m_vecBaseVelocity", myNewVector2)
         if client[steamid]["save_speed_stack_2"] > 1:
             esc.tell(userid,
-                     "#0,167,255[ #0,137,255Trikz #0,167,255] #245,0,61Speed has now been stacked (multiplier X%s" %
+                     "#124,252,0[ Trikz] #245,0,61Speed has now been stacked (multiplier X%s" %
                      client[steamid]["save_speed_stack"])
         client[steamid]["save_speed_stack_2"] -= 1
 
@@ -664,7 +663,7 @@ def cp_menu_select(userid, choice, popupid):
     velocity_x = float(es.getplayerprop(userid, 'CBasePlayer.localdata.m_vecVelocity[0]'))
     velocity_y = float(es.getplayerprop(userid, 'CBasePlayer.localdata.m_vecVelocity[1]'))
     velocity_z = float(es.getplayerprop(userid, 'CBasePlayer.localdata.m_vecVelocity[2]'))
-    timer = es.import_addon("trikztimer/plugins/timer")
+    timer = es.import_addon("queue_timer/plugins/timer")
     if timer.CheckPartner(userid):
         timer_id = timer.player[steamid]["timer_id"]
         state = timer.timer[timer_id]["state"]
@@ -679,7 +678,7 @@ def cp_menu_select(userid, choice, popupid):
             client[steamid]['snapshot_1'] = es.getplayerlocation(userid)
             client[steamid]['save_speed'] = (velocity_x, velocity_y, velocity_z)
             esc.tell(userid,
-                     '#0,167,255[ #0,137,255Trikz #0,167,255] #snowYou have saved your #yellow1st #245,61,0checkpoint')
+                     '#124,252,0[ Trikz] #snowYou have saved your #yellow1st #245,61,0checkpoint')
             cp_menu(userid)
 
     if int(choice) == 2:
@@ -722,7 +721,7 @@ def cp_menu_select(userid, choice, popupid):
                     userid, str(view_angles[0]), str(view_angles[1]), str(view_angles[2])))
 
             else:
-                esc.tell(userid, '#0,167,255[ #0,137,255Trikz #0,167,255] #245,0,61You have not set your 1st checkpoint.')
+                esc.tell(userid, '#124,252,0[ Trikz] #245,0,61You have not set your 1st checkpoint.')
             cp_menu(userid)
 
     if int(choice) == 3:
@@ -734,7 +733,7 @@ def cp_menu_select(userid, choice, popupid):
             client[steamid]['snapshot_2'] = es.getplayerlocation(userid)
             client[steamid]['save_speed_2'] = (velocity_x, velocity_y, velocity_z)
             esc.tell(userid,
-                     '#0,167,255[ #0,137,255Trikz #0,167,255] #snowYou have saved your #yellow2nd #245,61,0checkpoint')
+                     '#124,252,0[ Trikz] #snowYou have saved your #yellow2nd #245,61,0checkpoint')
             cp_menu(userid)
 
     if int(choice) == 4:
@@ -777,27 +776,27 @@ def cp_menu_select(userid, choice, popupid):
                     userid, str(view_angles[0]), str(view_angles[1]), str(view_angles[2])))
 
             else:
-                esc.tell(userid, '#0,167,255[ #0,137,255Trikz #0,167,255] #245,0,61You have not set your 2nd checkpoint.')
+                esc.tell(userid, '#124,252,0[ Trikz] #245,0,61You have not set your 2nd checkpoint.')
             cp_menu(userid)
 
     if int(choice) == 5:
         if client[steamid]['stop_speed'] == "Off":
             esc.tell(userid,
-                     '#0,167,255[ #0,137,255Trikz #0,167,255] #snowYour speed will now be restored when teleporting!')
+                     '#124,252,0[ Trikz] #snowYour speed will now be restored when teleporting!')
             client[steamid]['stop_speed'] = "On"
             cp_menu(userid)
         else:
-            esc.tell(userid, '#0,167,255[ #0,137,255Trikz #0,167,255] #snowYou will not save speed anymore!')
+            esc.tell(userid, '#124,252,0[ Trikz] #snowYou will not save speed anymore!')
             client[steamid]['stop_speed'] = "Off"
             cp_menu(userid)
 
     if int(choice) == 6:
         if client[steamid]['save_angles'] == "Off":
-            esc.tell(userid, '#0,167,255[ #0,137,255Trikz #0,167,255] #snowYou will now save ur angles!')
+            esc.tell(userid, '#124,252,0[ Trikz] #snowYou will now save ur angles!')
             client[steamid]['save_angles'] = "On"
             cp_menu(userid)
         else:
-            esc.tell(userid, '#0,167,255[ #0,137,255Trikz #0,167,255] #snowYou angles wont be saved!')
+            esc.tell(userid, '#124,252,0[ Trikz] #snowYou angles wont be saved!')
             client[steamid]['save_angles'] = "Off"
             cp_menu(userid)
 
@@ -813,10 +812,10 @@ def toggle(userid):
                          "CCSPlayer.baseclass.baseclass.baseclass.baseclass.baseclass.baseclass.m_CollisionGroup", 2)
 
         player.setColor(255, 255, 255, 100)
-        esc.tell(userid, '#0,167,255[ #0,137,255Trikz #0,167,255] #245,61,0Blocking#snow is now #yellowOFF')
+        esc.tell(userid, '#124,252,0[ Trikz] #245,61,0Blocking#snow is now #yellowOFF')
         client[steamid]["player_state"] = "Ghost"
     else:
-        esc.tell(userid, '#0,167,255[ #0,137,255Trikz #0,167,255] #245,61,0Blocking#snow is now #yellowON')
+        esc.tell(userid, '#124,252,0[ Trikz] #245,61,0Blocking#snow is now #yellowON')
         es.setplayerprop(userid,
                          "CCSPlayer.baseclass.baseclass.baseclass.baseclass.baseclass.baseclass.m_CollisionGroup", 0)
         player.setColor(255, 255, 255, 255)
@@ -958,7 +957,7 @@ def tp_menu(userid):
 
 
 def tp_menu_select(userid, choice, popupid):
-    timer = es.import_addon("trikztimer/plugins/timer")
+    timer = es.import_addon("queue_timer/plugins/timer")
     steamid = es.getplayersteamid(choice)
     if not timer.CheckPartner(userid):
         # if es.getplayerprop(userid, "CCSPlayer.baseclass.localdata.m_hGroundEntity") != -1:
@@ -966,21 +965,21 @@ def tp_menu_select(userid, choice, popupid):
         client[steamid]["tp_userid"] = userid
         client[steamid]["tp_accept"] = 1
         esc.tell(userid,
-                 '#0,167,255[ #0,137,255Trikz #0,167,255] #snowYou have sent a teleport request to %s' % es.getplayername(
+                 '#124,252,0[ Trikz] #snowYou have sent a teleport request to %s' % es.getplayername(
                      choice))
         esc.tell(choice,
-                 '#0,167,255[ #0,137,255Trikz #0,167,255]#tomato %s #snowwants to teleport to you! Type #tomato!yes #snowor #tomatoignore' % (
+                 '#124,252,0[ Trikz]#tomato %s #snowwants to teleport to you! Type #tomato!yes #snowor #tomatoignore' % (
                      es.getplayername(userid)))
     else:
         esc.tell(userid,
-                 '#0,167,255[ #0,137,255Trikz #0,167,255] #snowPlease unpartner first!')
+                 '#124,252,0[ Trikz] #snowPlease unpartner first!')
 
 
 def tp_accept(userid, text, steamid, name):
     if client[steamid]["tp_accept"] == 1:
 
         if timer_plugin:
-            timer = es.import_addon('trikztimer/plugins/timer')
+            timer = es.import_addon('queue_timer/plugins/timer')
             timer.TimerSolo_Stop(userid)
             timer.TimerPartner_Stop(userid)
 
@@ -989,7 +988,7 @@ def tp_accept(userid, text, steamid, name):
 
         es.server.queuecmd('es_setpos %s %s %s %s' % (tp_userid, location[0], location[1], location[2] + 64))
         esc.tell(tp_userid,
-                 '#0,167,255[ #0,137,255Trikz #0,167,255] #snowYou have #245,61,0teleported#snow to #yellow%s' % es.getplayername(
+                 '#124,252,0[ Trikz] #snowYou have #245,61,0teleported#snow to #yellow%s' % es.getplayername(
                      userid))
         client[steamid]["tp_accept"] = 0
 

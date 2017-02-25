@@ -222,12 +222,11 @@ def load():
     chat.registerHiddenCommand("/register", TSet.signup, False, False, False)
     chat.registerPublicCommand("!signup", TSet.signup, False, False, False)
     chat.registerHiddenCommand("/signup", TSet.signup, False, False, False)
-    esc.msg('#255,0,0[Timer] #0,255,0has been reloaded')
-    esc.msg('#255,0,0[Timer] #0,255,0Might experience lag spike for a sec..')
+    esc.msg('[Timer] #238,233,233has been reloaded')
+    esc.msg('[Timer] #238,233,233Might experience lag spike for a sec..')
 
-    UpdateRanks()
-    gamethread.delayed(30, UpdateRankedPointsAll)
-
+    chat.registerPublicCommand("!logs", Notify.logs, False, False, True)
+    chat.registerHiddenCommand("/logs", Notify.logs, False, False, True)
 
 
 def player_say(ev):
@@ -430,20 +429,20 @@ def player_join_callback(data, data_pack):
         else:
             TSQL.Query.execute("UPDATE stats SET name='%s', points_last_seen=points WHERE steamid='%s'",
                                (name, steamid))
-        esc.msg('#snowPlayer:#245,61,0 %s #tomato[%s points] #245,0,61(%s/%s) #snowconnected from #245,0,61%s' % (
+        esc.msg('#238,233,233Player:#245,61,0 %s #0,250,154[%s points] #245,0,61(%s/%s) #238,233,233connected from #245,0,61%s' % (
         name, data[1], rank, length, data[2]))
         earned = data[1] - data[3]
         if earned < 0:
             esc.tell(userid,
-                     '#255,0,0 ** NOTICE ** #0,255,0You have #255,0,0lost#0,255,0 %s points in the period you were inactive, because of new ranks!' % (
+                     '[Timer] #238,233,233You have lost #snow-%s points #238,233,233in the period you were inactive, because of new ranks!' % (
                      earned))
         elif earned > 0:
             esc.tell(userid,
-                     '#255,0,0 ** NOTICE ** #0,255,0You have #255,0,0gained#0,255,0 %s points in the period you were inactive, because of new ranks!' % (
+                     '[Timer] #238,233,233You have gained #snow+%s points#238,233,233 in the period you were inactive, because of new ranks!' % (
                          earned))
         else:
             esc.tell(userid,
-                     '#255,0,0 ** NOTICE ** #0,255,0Your points has not been modified in the period you were inactive!')
+                     '[Timer] #238,233,233Your points has not been modified in the period you were inactive!')
 
     else:
         ip = playerlib.getPlayer(userid).address.split(':')[0]
@@ -451,7 +450,7 @@ def player_join_callback(data, data_pack):
         TSQL.Query.execute(
             "INSERT INTO stats (steamid, points, name, country, points_last_seen, ip) VALUES ('%s', 0, '%s', '%s', 0, '%s')" % (
             steamid, name, country, ip))
-        esc.msg('#snowPlayer:#245,61,0 %s #245,0,61(New player) #snowconnected from#245,0,61 %s' % (name, country))
+        esc.msg('#238,233,233Player:#245,61,0 %s #245,0,61(New player) #238,233,233connected from#245,0,61 %s' % (name, country))
 
 
 def load_zones(s_map):
@@ -720,7 +719,7 @@ def ShowHudHint(userid):
 
                 TSet.teleport(userid)
 
-                hudhint(userid, '(00:00:00)\n \nSpeed: %s\nYou need !partner in this area' % (velocity))
+                hudhint(userid, '(00:00:00)\n \nSpeed: %s\nChallenge requires !partner' % (velocity))
 
                 TimerSolo_Stop(userid)
 
@@ -818,10 +817,10 @@ def ShowHudHint(userid):
                 if CheckPartner(userid):
                     if not timer[timer_id]['state'] == 2:
                         esc.tell(userid,
-                                 '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou automatic unpartnered with %s' % es.getplayername(
+                                 '[Timer] #238,233,233You automatic unpartnered with %s' % es.getplayername(
                                      player[steamid]["partner"]))
                         esc.tell(player[steamid]["partner"],
-                                 '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou automatic unpartnered with %s' % es.getplayername(
+                                 '[Timer] #238,233,233You automatic unpartnered with %s' % es.getplayername(
                                      userid))
                         player[steamid]["partner"] = None
 
@@ -891,10 +890,10 @@ def tp_restart(userid):
             TimerPartner_Stop(userid)
         else:
             esc.tell(userid,
-                     '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #snowNo restart location has been set, contact admin!')
+                     '[Timer] #238,233,233No restart location has been set, contact admin!')
     else:
         esc.tell(userid,
-                 '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #snowNo restart location has been set, contact admin!')
+                 '[Timer] #238,233,233No restart location has been set, contact admin!')
 
 
 def tp_end(userid):
@@ -919,18 +918,18 @@ def tp_end(userid):
                     userid, restart_location[0], restart_location[1], restart_location[2]))
             if CheckPartner(userid):
                 esc.tell(userid,
-                         '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou automatic unpartnered with %s' % es.getplayername(
+                         '[Timer] #238,233,233You automatic unpartnered with %s' % es.getplayername(
                              player[steamid]["partner"]))
                 esc.tell(player[steamid]["partner"],
-                         '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou automatic unpartnered with %s' % es.getplayername(
+                         '[Timer] #238,233,233You automatic unpartnered with %s' % es.getplayername(
                              userid))
                 player[steamid]["partner"] = None
         else:
             esc.tell(userid,
-                     '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #snowThere are no end!')
+                     '[Timer] #238,233,233There are no end!')
     else:
         esc.tell(userid,
-                 '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #snowNo end location has not been calculated contact admin!')
+                 '[Timer] #238,233,233No end location has not been calculated contact admin!')
 
 
 def tp_bend(userid, text, steamid, name):
@@ -960,18 +959,18 @@ def tp_bend(userid, text, steamid, name):
                         userid, restart_location[0], restart_location[1], restart_location[2]))
                 if CheckPartner(userid):
                     esc.tell(userid,
-                             '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou automatic unpartnered with %s' % es.getplayername(
+                             '[Timer] #238,233,233You automatic unpartnered with %s' % es.getplayername(
                                  player[steamid]["partner"]))
                     esc.tell(player[steamid]["partner"],
-                             '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou automatic unpartnered with %s' % es.getplayername(
+                             '[Timer] #238,233,233You automatic unpartnered with %s' % es.getplayername(
                                  userid))
                     player[steamid]["partner"] = None
             else:
                 esc.tell(userid,
-                         '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #snowThere are no end!')
+                         '[Timer] #238,233,233There are no end!')
         else:
             esc.tell(userid,
-                     '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #snowNo end location has not been calculated contact admin!')
+                     '[Timer] #238,233,233No end location has not been calculated contact admin!')
 
     elif "Bonus %s" % number in commands:
         if not zones[str(commands["Bonus %s" % number])]['location_3'] == "none" and not \
@@ -996,10 +995,10 @@ def tp_bend(userid, text, steamid, name):
             TimerPartner_Stop(userid)
         else:
             esc.tell(userid,
-                     '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #snowThere are no end!')
+                     '[Timer] #238,233,233There are no end!')
     else:
         esc.tell(userid,
-                 '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #snowNo end location has not been calculated contact admin!')
+                 '[Timer] #238,233,233No end location has not been calculated contact admin!')
 
 
 def tp_bonus(userid, text, steamid, name):
@@ -1019,10 +1018,10 @@ def tp_bonus(userid, text, steamid, name):
                 TimerPartner_Stop(userid)
             else:
                 esc.tell(userid,
-                         '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #yellowBonus 1 #snowteleport location has not been set, contact admin!')
+                         '[Timer] #yellowBonus 1 #238,233,233teleport location has not been set, contact admin!')
         else:
             esc.tell(userid,
-                     '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #snowThat bonus does not exist!')
+                     '[Timer] #238,233,233That bonus does not exist!')
 
     elif "Bonus %s" % number in commands:
         if not zones[str(commands["Bonus %s" % number])]['restart_loc'] == "none":
@@ -1034,10 +1033,10 @@ def tp_bonus(userid, text, steamid, name):
             TimerPartner_Stop(userid)
         else:
             esc.tell(userid,
-                     '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #yellowBonus %s #snowteleport location has not been set, contact admin!' % number)
+                     '[Timer] #yellowBonus %s #238,233,233teleport location has not been set, contact admin!' % number)
     else:
         esc.tell(userid,
-                 '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #snowThat bonus does not exist!')
+                 '[Timer] #238,233,233That bonus does not exist!')
 
 
 def CheckZone(userid):
@@ -1223,15 +1222,11 @@ def UpdateRankedPoints(steamid, personal=False):
 
 def UpdateRankedPointsAll(personal=False):
     TSQL.Query.fetchall("SELECT steamid FROM stats", callback=UpdateRankedPointsAll_Step_1)
-    esc.msg('#100,100,100[Timer] #snowRanks are being updated!')
+    esc.msg('#yellow[Timer] #238,233,233Ranks are being #245,0,61updated!')
 
 
 def UpdateRankedPointsAll_Step_1(data):
     for steamid in data:
-        points = 0
-        map = ""
-        style = ""
-
         data_pack = {'steamid': steamid}
         TSQL.Query.fetchall(
             "SELECT map, points, style FROM completed WHERE season=%i AND (steamid='%s' OR steamid_partner='%s') ORDER BY map, time ASC",
@@ -1271,8 +1266,9 @@ def UpdateRanks_Step_1(data):
 def SetRankedPoints(id, map, steamid, type, personal=False):
     index = 1
     data_pack = {'id': id, 'map': map, 'steamid': steamid, 'type': type}
-    TSQL.Query.fetchall("SELECT id FROM completed) as length FROM completed WHERE map='%s' AND type='%s' AND season=%i ORDER BY time ASC",
+    TSQL.Query.fetchall("SELECT id FROM completed WHERE map='%s' AND type='%s' AND season=%i ORDER BY time ASC",
                         args=(map, type, c_season), callback=SetRankedPoints_Step_1, data_pack=data_pack)
+
 
 
 
@@ -1341,7 +1337,7 @@ def EndZone(userid):
                     if bool(data):
                         if data[0] > finish_time:
                             esc.tell(userid,
-                                     '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #snowPersonal time improved by #245,61,0%s' % (
+                                     '[Timer] #238,233,233Personal time improved by #245,61,0%s' % (
                                          TimeFormat(data[0] - finish_time)))
                             mysql.query.execute(
                                 "UPDATE completed_personal SET map='%s', steamid='%s', name='%s', country='%s', style='%s', type='%s', time=%f, jumps=%i, flashbangs=%i, date=CURRENT_TIMESTAMP WHERE steamid='%s' AND map='%s' AND style='%s' AND type='%s' AND season=%i",
@@ -1353,17 +1349,14 @@ def EndZone(userid):
 
                         else:
                             esc.tell(userid,
-                                     '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #snowNo new personal time...')
+                                     '[Timer] #238,233,233No new personal time...')
 
 
 
                     else:
-                        esc.tell(userid,
-                                 '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #snowYou got %s points for completing it for the first time!' % (
-                                     zones[timer[steamid]['id']]['points']))
+                        esc.tell(userid,'[Timer] #245,0,61[%s points] #238,233,233check !wr to see true amount' % (zones[timer[steamid]['id']]['points']))
 
-                        mysql.query.execute("UPDATE stats SET points = points + %i WHERE steamid='%s'",
-                                            (zones[timer[steamid]['id']]['points'], steamid))
+                        mysql.query.execute("UPDATE stats SET points = points + %i WHERE steamid='%s'", (zones[timer[steamid]['id']]['points'], steamid))
 
                         mysql.query.execute(
                             "INSERT INTO completed_personal (map, steamid, name, country, style, type, time, jumps, flashbangs, date, points, season) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', %f, %i, %i, CURRENT_TIMESTAMP, %i, %i)" %
@@ -1373,13 +1366,13 @@ def EndZone(userid):
 
                     if finish_time >= WR:
                         esc.msg(
-                            '#255,51,0[#0,137,255 Timer #255,51,0] #245,61,0%s #snowhas completed #245,61,0%s Timer #snowin #245,61,0%s #snow- (SOLO) / (%s) - #tomato(WR +%s)!' % (
+                            '[Timer] #245,61,0%s #238,233,233has completed #245,61,0%s Timer #238,233,233in #245,61,0%s #238,233,233- (SOLO) / (%s) - #0,250,154(WR +%s)!' % (
                                 name, zones[timer[steamid]['id']]['name'], TimeFormat(finish_time),
                                 timer[steamid]['style'],
                                 TimeFormat(finish_time - WR)))
                     else:
                         esc.msg(
-                            '#255,51,0[#0,137,255 Timer #255,51,0] #245,61,0%s #snowhas completed #245,61,0%s Timer #snowin #245,61,0%s #snow- (SOLO) / (%s) - #tomato(NEW WR)!' % (
+                            '[Timer] #245,61,0%s #238,233,233has completed #245,61,0%s Timer #238,233,233in #245,61,0%s #238,233,233- (SOLO) / (%s) - #0,250,154(NEW WR)!' % (
                                 name, zones[timer[steamid]['id']]['name'], TimeFormat(finish_time),
                                 timer[steamid]['style']))
 
@@ -1422,7 +1415,7 @@ def EndZone(userid):
                     if bool(data):
                         if data[0] > finish_time:
                             esc.tell(userid,
-                                     '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #snowPersonal time improved by #245,61,0%s' % (
+                                     '[Timer] #238,233,233Personal time improved by #245,61,0%s' % (
                                          TimeFormat(data[0] - finish_time)))
                             mysql.query.execute(
                                 "UPDATE completed_personal SET map='%s', steamid='%s', name='%s', country='%s', style='%s', type='%s', time=%f, jumps=%i, flashbangs=%i, date=CURRENT_TIMESTAMP WHERE steamid='%s' AND map='%s' AND style='%s' AND type='%s' AND season=%i" %
@@ -1434,13 +1427,13 @@ def EndZone(userid):
 
                         else:
                             esc.tell(userid,
-                                     '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #snowNo new personal time...')
+                                     '[Timer] #238,233,233No new personal time...')
 
 
 
                     else:
                         esc.tell(userid,
-                                 '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #snowYou got %s points for completing it for the first time!' % (
+                                 '[Timer] #245,0,61[%s points] #238,233,233check !wr to see true amount' % (
                                      zones[timer[timer_id]['id']]['points']))
                         mysql.query.execute("UPDATE stats SET points=points + ? WHERE steamid='%s'",
                                             (zones[timer[timer_id]['id']]['points'], steamid))
@@ -1461,7 +1454,7 @@ def EndZone(userid):
                     if bool(data):
                         if data[0] > finish_time:
                             esc.tell(partner,
-                                     '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #snowPersonal time improved by #245,61,0%s' % (
+                                     '[Timer] #238,233,233Personal time improved by #245,61,0%s' % (
                                          TimeFormat(data[0] - finish_time)))
                             mysql.query.execute(
                                 "UPDATE completed_personal SET map='%s', steamid='%s', name='%s', country='%s', style='%s', type='%s', time=%f, jumps=%i, flashbangs=%i, date=CURRENT_TIMESTAMP WHERE steamid='%s' AND map='%s' AND style='%s' AND type='%s' AND season=%i",
@@ -1474,13 +1467,13 @@ def EndZone(userid):
 
                         else:
                             esc.tell(partner,
-                                     '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #snowNo new personal time...')
+                                     '[Timer] #238,233,233No new personal time...')
 
 
 
                     else:
                         esc.tell(partner,
-                                 '#255,0,0#255,51,0[#0,137,255 Timer #255,51,0] #snowYou got %s points for completing it for the first time!' % (
+                                 '[Timer] #245,0,61[%s points] #238,233,233check !wr to see true amount' % (
                                      zones[timer[timer_id]['id']]['points']))
                         mysql.query.execute("UPDATE stats SET points=points + ? WHERE steamid='%s'",
                                             (zones[timer[timer_id]['id']]['points'], steamid_partner))
@@ -1542,12 +1535,12 @@ def EndZone(userid):
 
                     if finish_time >= WR:
                         esc.msg(
-                            '#255,51,0[#0,137,255 Timer #255,51,0] #245,61,0%s #snow #snowand #245,61,0%s #snowhas completed #245,61,0%s #snowin #245,61,0%s #snow- (PARTNERED) / (%s) - #tomato(WR +%s)!' % (
+                            '[Timer] #245,61,0%s #238,233,233 #238,233,233and #245,61,0%s #238,233,233has completed #245,61,0%s #238,233,233in #245,61,0%s #238,233,233- (PARTNERED) / (%s) - #0,250,154(WR +%s)!' % (
                                 name, name_partner, zones[timer[timer_id]['id']]['name'], TimeFormat(finish_time),
                                 timer[timer_id]['style'], TimeFormat(finish_time - WR)))
                     else:
                         esc.msg(
-                            '#255,51,0[#0,137,255 Timer #255,51,0] #245,61,0%s #snow #snowand #245,61,0%s #snowhas completed #245,61,0%s #snowin #245,61,0%s #snow- (PARTNERED) / (%s) - #tomato(NEW WR)!' % (
+                            '[Timer] #245,61,0%s #238,233,233 #238,233,233and #245,61,0%s #238,233,233has completed #245,61,0%s #238,233,233in #245,61,0%s #238,233,233- (PARTNERED) / (%s) - #0,250,154(NEW WR)!' % (
                                 name, name_partner, zones[timer[timer_id]['id']]['name'], TimeFormat(finish_time),
                                 timer[timer_id]['style']))
 
@@ -1555,7 +1548,6 @@ def EndZone(userid):
                     TimerSolo_Stop(userid)
                     UpdateRanks()
                     gamethread.delayed(30, UpdateRankedPointsAll)
-                    esc.msg('#255,0,0Updating ranks...')
 
                 elif CheckPartner(userid):
                     hudhint(userid, '(%s)\n \nYou are in the wrong end zone!\nDont worry you still have timer!' % (
@@ -1563,7 +1555,7 @@ def EndZone(userid):
 
 
             else:
-                hudhint(userid, 'You are in the end area..')
+                hudhint(userid, '[ In End Zone ]')
 
 
 
@@ -1637,20 +1629,20 @@ def CreateTimer_keyhint(userid):
 
                 if player[steamid]["id"] in zones:
                     if zones[str(player[steamid]["id"])]['type'] == "timer":
-                        string += "- %s Timer -" % zones[player[steamid]["id"]]["name"]
+                        string += "[ %s Timer ]" % zones[player[steamid]["id"]]["name"]
 
                         if zones[player[steamid]["id"]]["partner_needed"] == 1:
 
-                            string += "\nChallenge: Partnered"
+                            string += "\n[Partnered]"
                         else:
-                            string += "\nChallenge: Solo"
+                            string += "\n[Solo]"
                         if GetPersonalWR(steamid, "Normal", str(current_map),
                                          zones[player[steamid]["id"]]["name"]) != 0:
-                            string += "\n\n\nPersonal best: %s" % TimeFormat(
+                            string += "\n\n\nYour best: %s" % TimeFormat(
                                 GetPersonalWR(steamid, "Normal", str(current_map),
                                               zones[player[steamid]["id"]]["name"]))
                         else:
-                            string += "\n\nPersonal best: None"
+                            string += "\n\nYour best: None"
 
                         if zones[player[steamid]["id"]]["partner_needed"] == 1:
                             WrName = GetWRName2(steamid, "Normal", str(current_map),
@@ -1988,7 +1980,7 @@ class Menu:
             info.menuselect = self.start_menu_select
         else:
             esc.tell(userid,
-                     '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou are not authorized to run this #yellowcommand!')
+                     '[Timer] #238,233,233You are not authorized to run this #yellowcommand!')
 
     def start_menu_select(self, userid, choice, popupid):
         if int(choice) == 2:
@@ -2018,7 +2010,7 @@ class Menu:
     def zones_menu_select(self, userid, choice, popupid):
         if int(choice) == 1:
             esc.tell(userid,
-                     "#255,51,0[#0,137,255 Timer #255,51,0] #snowPlease type a #245,61,0name #snowfor your catogory! (Use #tomato!tn <name> #snow)")
+                     "[Timer] #238,233,233Please type a #245,61,0name #238,233,233for your catogory! (Use #0,250,154!tn <name> #238,233,233)")
             auth['vaild'] = es.getplayersteamid(userid)
             auth['id'] = False
 
@@ -2046,7 +2038,7 @@ class Menu:
     def zones_delete_select(self, userid, choice, popupid):
         mysql.query.execute('DELETE FROM zones WHERE id = %s', (int(choice),))
         gamethread.cancelDelayed('drawbox_%s' % str(choice))
-        esc.tell(userid, '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou deleted a zone! ID %s' % choice)
+        esc.tell(userid, '[Timer] #238,233,233You deleted a zone! ID %s' % choice)
         load_zones(str(current_map))
         Menu.zones_delete(userid)
 
@@ -2140,22 +2132,22 @@ class Menu:
         id = auth['id']
         if int(choice) == 1:
             esc.tell(userid,
-                     "#255,51,0[#0,137,255 Timer #255,51,0] #snowPlease type a new #245,61,0name #snowfor your zone! (Use #tomato!tcn <name> #snow)")
+                     "[Timer] #238,233,233Please type a new #245,61,0name #238,233,233for your zone! (Use #0,250,154!tcn <name> #238,233,233)")
             auth['vaild'] = es.getplayersteamid(userid)
 
         elif int(choice) == 2:
             esc.tell(userid,
-                     "#255,51,0[#0,137,255 Timer #255,51,0] #snowPlease type a new number to change #245,61,0tier (Use #tomato!tct <number> #snow)")
+                     "[Timer] #238,233,233Please type a new number to change #245,61,0tier (Use #0,250,154!tct <number> #238,233,233)")
             auth['vaild'] = es.getplayersteamid(userid)
 
         elif int(choice) == 3:
             esc.tell(userid,
-                     "#255,51,0[#0,137,255 Timer #255,51,0] #snowPlease type a new number to change #245,61,0points (Use #tomato!tcp <number> #snow)")
+                     "[Timer] #238,233,233Please type a new number to change #245,61,0points (Use #0,250,154!tcp <number> #238,233,233)")
             auth['vaild'] = es.getplayersteamid(userid)
 
         elif int(choice) == 4:
             esc.tell(userid,
-                     "#255,51,0[#0,137,255 Timer #255,51,0] #snowWhat should this zone do? If you choose Timer it requires an end zone!")
+                     "[Timer] #238,233,233What should this zone do? If you choose Timer it requires an end zone!")
             Menu.zones_modify_type(userid, auth['id'])
             auth['vaild'] = es.getplayersteamid(userid)
 
@@ -2165,11 +2157,11 @@ class Menu:
                                         (id,))
             if data[5] == 1:
                 mysql.query.execute("UPDATE zones SET partner_needed='%s' WHERE id='%s'", (0, int(auth['id'])))
-                esc.tell(userid, "#255,51,0[#0,137,255 Timer #255,51,0] #snowPartner needed is now set to: #245,61,0No")
+                esc.tell(userid, "[Timer] #238,233,233Partner needed is now set to: #245,61,0No")
             else:
                 mysql.query.execute("UPDATE zones SET partner_needed='%s' WHERE id='%s'", (1, int(auth['id'])))
                 esc.tell(userid,
-                         "#255,51,0[#0,137,255 Timer #255,51,0] #snowPartner needed is now set to: #245,61,0Yes")
+                         "[Timer] #238,233,233Partner needed is now set to: #245,61,0Yes")
             Menu.zones_modify(userid, id)
             auth['vaild'] = es.getplayersteamid(userid)
 
@@ -2177,7 +2169,7 @@ class Menu:
             Menu.zones_create(userid, id, "start")
             zones["temp_start_%s" % str(id)] = es.getplayerlocation(userid)
             drawbox(userid, str(id), zones["temp_start_%s" % str(id)], "start", None)
-            esc.tell(userid, "#255,51,0[#0,137,255 Timer #255,51,0] #snowPlease show the coordinates!")
+            esc.tell(userid, "[Timer] #238,233,233Please show the coordinates!")
 
         elif int(choice) == 7:
             data = mysql.query.fetchone("SELECT id, type, name, tier, points, partner_needed FROM zones WHERE id='%s'",
@@ -2186,14 +2178,14 @@ class Menu:
                 Menu.zones_create(userid, id, "end")
                 zones["temp_end_%s" % str(id)] = es.getplayerlocation(userid)
                 drawbox(userid, str(id), zones["temp_end_%s" % str(id)], "end", None)
-                esc.tell(userid, "#255,51,0[#0,137,255 Timer #255,51,0] #snowPlease show the coordinates!")
+                esc.tell(userid, "[Timer] #238,233,233Please show the coordinates!")
             else:
-                esc.tell(userid, "#255,51,0[#0,137,255 Timer #255,51,0] #snowPlease change zone type!")
+                esc.tell(userid, "[Timer] #238,233,233Please change zone type!")
                 Menu.zones_modify(userid, id)
 
         elif int(choice) == 8:
             esc.tell(userid,
-                     "#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have now added teleport location for this zone")
+                     "[Timer] #238,233,233You have now added teleport location for this zone")
             mysql.query.execute("UPDATE zones SET restart_loc='%s' WHERE id='%s'",
                                 (FormatZone(es.getplayerlocation(userid)), id))
             load_zones(current_map)
@@ -2224,7 +2216,7 @@ class Menu:
         id = auth['id']
         if int(choice) == 1:
             if zones['case'] == "start":
-                esc.tell(userid, '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou added zone coordinates!')
+                esc.tell(userid, '[Timer] #238,233,233You added zone coordinates!')
                 gamethread.cancelDelayed('drawbox_%s' % str(id))
                 drawbox(userid, str(id), zones["temp_start_%s" % str(id)], "start", es.getplayerlocation(userid))
                 mysql.query.execute("UPDATE zones SET location_1='%s', location_2='%s' WHERE id='%s'", (
@@ -2232,7 +2224,7 @@ class Menu:
                 load_zones(current_map)
                 Menu.zones_modify(userid, id)
             else:
-                esc.tell(userid, '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou added zone coordinates!')
+                esc.tell(userid, '[Timer] #238,233,233You added zone coordinates!')
                 gamethread.cancelDelayed('drawbox_%s' % str(id))
                 drawbox(userid, str(id), zones["temp_end_%s" % str(id)], "end", es.getplayerlocation(userid))
                 mysql.query.execute("UPDATE zones SET location_3='%s', location_4='%s' WHERE id='%s'", (
@@ -2255,29 +2247,29 @@ class Menu:
                     auth['id'] = int(auth_zones())
                     Menu.zones_modify(userid, auth['id'])
                     esc.tell(userid,
-                             "#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have a created zone #yellow%s " % text[
+                             "[Timer] #238,233,233You have a created zone #yellow%s " % text[
                                                                                                                4:int(
                                                                                                                    get_len)])
 
                 else:
                     esc.tell(userid,
-                             "#255,51,0[#0,137,255 Timer #255,51,0] #snowA zone is already in progress, you are not authorized to make changes right now")
+                             "[Timer] #238,233,233A zone is already in progress, you are not authorized to make changes right now")
             else:
                 esc.tell(userid,
-                         "#255,51,0[#0,137,255 Timer #255,51,0] #snowYou must finish editing this #yellowzone#snow, before creating a new one!")
+                         "[Timer] #238,233,233You must finish editing this #yellowzone#238,233,233, before creating a new one!")
                 auth['id'] = auth_zones()
                 Menu.zones_modify(userid, auth['id'])
 
         else:
             esc.tell(userid,
-                     "#255,51,0[#0,137,255 Timer #255,51,0] #snowThere are no #yellowzones#snow is in progress!")
+                     "[Timer] #238,233,233There are no #yellowzones#238,233,233 is in progress!")
 
     def zones_points_command(self, userid, text, steamid, name):
         if auth['vaild']:
             if auth['vaild'] == steamid:
                 get_len = len(text)
                 esc.tell(userid,
-                         "#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have changed the points to #yellow#yellow%s " % text[
+                         "[Timer] #238,233,233You have changed the points to #yellow#yellow%s " % text[
                                                                                                                          5:int(
                                                                                                                              get_len)])
                 mysql.query.execute("UPDATE zones SET points='%s' WHERE id='%s'",
@@ -2285,11 +2277,11 @@ class Menu:
                 Menu.zones_modify(userid, auth['id'])
             else:
                 esc.tell(userid,
-                         "#255,51,0[#0,137,255 Timer #255,51,0] #snowA zone is already in progress, you are not authorized to make changes right now")
+                         "[Timer] #238,233,233A zone is already in progress, you are not authorized to make changes right now")
 
         else:
             esc.tell(userid,
-                     "#255,51,0[#0,137,255 Timer #255,51,0] #snowThere are no #yellowzones#snow is in progress!")
+                     "[Timer] #238,233,233There are no #yellowzones#238,233,233 is in progress!")
 
     def zones_tier_command(self, userid, text, steamid, name):
         if auth['vaild']:
@@ -2297,7 +2289,7 @@ class Menu:
 
                 get_len = len(text)
                 esc.tell(userid,
-                         "#255,51,0[#0,137,255 Timer #255,51,0] #245,0,61You have succesfully changed the tier to #yellow%s " % text[
+                         "[Timer] #245,0,61You have succesfully changed the tier to #yellow%s " % text[
                                                                                                                                 5:int(
                                                                                                                                     get_len)])
                 mysql.query.execute("UPDATE zones SET tier='%s' WHERE id='%s'",
@@ -2305,18 +2297,18 @@ class Menu:
                 Menu.zones_modify(userid, auth['id'])
             else:
                 esc.tell(userid,
-                         "#255,51,0[#0,137,255 Timer #255,51,0] #snowA zone is already in progress, you are not authorized to make changes right now")
+                         "[Timer] #238,233,233A zone is already in progress, you are not authorized to make changes right now")
 
         else:
             esc.tell(userid,
-                     "#255,51,0[#0,137,255 Timer #255,51,0] #snowThere are no #yellowzones#snow is in progress!")
+                     "[Timer] #238,233,233There are no #yellowzones#238,233,233 is in progress!")
 
     def zones_rename_command(self, userid, text, steamid, name):
         if auth['vaild']:
             if auth['vaild'] == steamid:
                 get_len = len(text)
                 esc.tell(userid,
-                         "#255,51,0[#0,137,255 Timer #255,51,0] #245,0,61You have succesfully changed the name to #yellow%s " % text[
+                         "[Timer] #245,0,61You have succesfully changed the name to #yellow%s " % text[
                                                                                                                                 5:int(
                                                                                                                                     get_len)])
                 mysql.query.execute("UPDATE zones SET name='%s' WHERE id='%s'",
@@ -2325,11 +2317,11 @@ class Menu:
 
             else:
                 esc.tell(userid,
-                         "#255,51,0[#0,137,255 Timer #255,51,0] #snowA zone is already in progress, you are not authorized to make changes right now")
+                         "[Timer] #238,233,233A zone is already in progress, you are not authorized to make changes right now")
 
         else:
             esc.tell(userid,
-                     "#255,51,0[#0,137,255 Timer #255,51,0] #snowThere are no #yellowzones#snow is in progress!")
+                     "[Timer] #238,233,233There are no #yellowzones#238,233,233 is in progress!")
 
     def zones_modify_type(self, userid, id):
         auth['id'] = int(id)
@@ -2358,37 +2350,37 @@ class Menu:
         steamid = es.getplayersteamid(userid)
         id = auth['id']
         if int(choice) == 1:
-            esc.tell(userid, "#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have succesfully changed the type")
+            esc.tell(userid, "[Timer] #238,233,233You have succesfully changed the type")
             mysql.query.execute("UPDATE zones SET type='%s' WHERE id='%s'", ("timer", auth['id']))
             Menu.zones_modify(userid, id)
 
         elif int(choice) == 2:
-            esc.tell(userid, "#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have succesfully changed the type")
+            esc.tell(userid, "[Timer] #238,233,233You have succesfully changed the type")
             mysql.query.execute("UPDATE zones SET type='%s' WHERE id='%s'", ("speed", auth['id']))
             Menu.zones_modify(userid, id)
 
         elif int(choice) == 3:
-            esc.tell(userid, "#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have succesfully changed the type")
+            esc.tell(userid, "[Timer] #238,233,233You have succesfully changed the type")
             mysql.query.execute("UPDATE zones SET type='%s' WHERE id='%s'", ("cheat", auth['id']))
             Menu.zones_modify(userid, id)
 
         elif int(choice) == 4:
-            esc.tell(userid, "#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have succesfully changed the type")
+            esc.tell(userid, "[Timer] #238,233,233You have succesfully changed the type")
             mysql.query.execute("UPDATE zones SET type='%s' WHERE id='%s'", ("respawn", auth['id']))
             Menu.zones_modify(userid, id)
 
         elif int(choice) == 5:
-            esc.tell(userid, "#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have succesfully changed the type")
+            esc.tell(userid, "[Timer] #238,233,233You have succesfully changed the type")
             mysql.query.execute("UPDATE zones SET type='%s' WHERE id='%s'", ("flashbot", auth['id']))
             Menu.zones_modify(userid, id)
 
         elif int(choice) == 6:
-            esc.tell(userid, "#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have succesfully changed the type")
+            esc.tell(userid, "[Timer] #238,233,233You have succesfully changed the type")
             mysql.query.execute("UPDATE zones SET type='%s' WHERE id='%s'", ("noflash", auth['id']))
             Menu.zones_modify(userid, id)
 
         elif int(choice) == 7:
-            esc.tell(userid, "#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have succesfully changed the type")
+            esc.tell(userid, "[Timer] #238,233,233You have succesfully changed the type")
             mysql.query.execute("UPDATE zones SET type='%s' WHERE id='%s'", ("tournament", auth['id']))
             Menu.zones_modify(userid, id)
 
@@ -2398,7 +2390,7 @@ class Menu:
     def partner_menu(self, userid):
         steamid = es.getplayersteamid(userid)
         info = popuplib.easymenu(str(steamid) + 'partner', None, self.partner_menu_select)
-        info.settitle("Choose who you wanna partner up with")
+        info.settitle("Select a partner..")
         info.c_beginsep = " "
         info.c_pagesep = " "
         for userid_2 in es.getUseridList():
@@ -2433,14 +2425,14 @@ class Menu:
                                                           'state': 0}
 
             esc.tell(userid,
-                     '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou are now partnered with %s' % es.getplayername(
+                     '[Timer] #238,233,233You are now partnered with %s' % es.getplayername(
                          choice))
-            esc.tell(choice, '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou are now partnered with %s' % name)
+            esc.tell(choice, '[Timer] #238,233,233You are now partnered with %s' % name)
         else:
             esc.tell(userid,
-                     '#255,51,0[#0,137,255 Timer #255,51,0] #snowWaiting for the other player... will select you..')
+                     '[Timer] #238,233,233Waiting for the other player... will select you..')
             esc.tell(choice,
-                     '#255,51,0[#0,137,255 Timer #255,51,0] #snow#245,61,0%s #snowwants to partner up with you! Please type !partner and choose him' % (
+                     '[Timer] #238,233,233#245,61,0%s #238,233,233wants to partner up with you! Please type !partner and choose him' % (
                          name))
 
     def zones_object(self, userid):
@@ -2602,7 +2594,7 @@ class Menu:
         index = 0
         full_top = popuplib.easymenu(steamid + 'Ptop', None, self.ptop_select)
         full_top.settitle(
-            "Trikz Timer [Top 100]\n%s (%s Timer, %s)\nSeason %s\nPersonal world records..\n - OLD RECORDS -" % (
+            "Trikz Timer [Top 100]\n%s (%s Timer, %s)\nSeason %s\nPersonal world records..\n - Old Records -" % (
             map_choose, type, style, c_season))
         # full_top.submenu(10, 'Main Guild')
         full_top.c_beginsep = " "
@@ -2764,9 +2756,9 @@ class Menu:
                 if not timer[id]["style"] == "Normal":
                     timer[id]["style"] = "Normal"
                     esc.tell(userid,
-                             '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have changed the mode to #tomatoNormal')
+                             '[Timer] #238,233,233You have changed the mode to #0,250,154Normal')
                     esc.tell(player[steamid]["partner"],
-                             '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou partner #245,61,0 %s #snowhas recently changed the mode to #tomatoNormal' % (
+                             '[Timer] #238,233,233You partner #245,61,0 %s #238,233,233has recently changed the mode to #0,250,154Normal' % (
                                  name))
                     TimerSolo_Stop(userid)
                     TimerPartner_Stop(userid)
@@ -2774,7 +2766,7 @@ class Menu:
                 if not timer[steamid]["style"] == "Normal":
                     timer[steamid]["style"] = "Normal"
                     esc.tell(userid,
-                             '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have changed the mode to #tomatoNormal')
+                             '[Timer] #238,233,233You have changed the mode to #0,250,154Normal')
                     TimerSolo_Stop(userid)
                     TimerPartner_Stop(userid)
             Menu.mode(userid)
@@ -2783,9 +2775,9 @@ class Menu:
                 if not timer[id]["style"] == "Sideways":
                     timer[id]["style"] = "Sideways"
                     esc.tell(userid,
-                             '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have changed the mode to #tomatoSideways')
+                             '[Timer] #238,233,233You have changed the mode to #0,250,154Sideways')
                     esc.tell(player[steamid]["partner"],
-                             '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou partner #245,61,0 %s #snowhas recently changed the mode to #tomatoSideways' % (
+                             '[Timer] #238,233,233You partner #245,61,0 %s #238,233,233has recently changed the mode to #0,250,154Sideways' % (
                                  name))
                     TimerSolo_Stop(userid)
                     TimerPartner_Stop(userid)
@@ -2793,7 +2785,7 @@ class Menu:
                 if not timer[steamid]["style"] == "Sideways":
                     timer[steamid]["style"] = "Sideways"
                     esc.tell(userid,
-                             '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have changed the mode to #tomatoSideways')
+                             '[Timer] #238,233,233You have changed the mode to #0,250,154Sideways')
                     TimerSolo_Stop(userid)
                     TimerPartner_Stop(userid)
             Menu.mode(userid)
@@ -2803,9 +2795,9 @@ class Menu:
                 if not timer[id]["style"] == "Half-Sideways":
                     timer[id]["style"] = "Half-Sideways"
                     esc.tell(userid,
-                             '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have changed the mode to #tomatoHalf-Sideways')
+                             '[Timer] #238,233,233You have changed the mode to #0,250,154Half-Sideways')
                     esc.tell(player[steamid]["partner"],
-                             '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou partner #245,61,0 %s #snowhas recently changed the mode to #tomatoHalf-Sideways' % (
+                             '[Timer] #238,233,233You partner #245,61,0 %s #238,233,233has recently changed the mode to #0,250,154Half-Sideways' % (
                                  name))
                     TimerSolo_Stop(userid)
                     TimerPartner_Stop(userid)
@@ -2813,7 +2805,7 @@ class Menu:
                 if not timer[steamid]["style"] == "Half-Sideways":
                     timer[steamid]["style"] = "Half-Sideways"
                     esc.tell(userid,
-                             '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have changed the mode to #tomatoHalf-Sideways')
+                             '[Timer] #238,233,233You have changed the mode to #0,250,154Half-Sideways')
                     TimerSolo_Stop(userid)
                     TimerPartner_Stop(userid)
             Menu.mode(userid)
@@ -2823,9 +2815,9 @@ class Menu:
                 if not timer[id]["style"] == "W-Only":
                     timer[id]["style"] = "W-Only"
                     esc.tell(userid,
-                             '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have changed the mode to #tomatoW-Only')
+                             '[Timer] #238,233,233You have changed the mode to #0,250,154W-Only')
                     esc.tell(player[steamid]["partner"],
-                             '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou partner #245,61,0 %s #snowhas recently changed the mode to #tomatoW-Only' % (
+                             '[Timer] #238,233,233You partner #245,61,0 %s #238,233,233has recently changed the mode to #0,250,154W-Only' % (
                                  name))
                     TimerSolo_Stop(userid)
                     TimerPartner_Stop(userid)
@@ -2833,7 +2825,7 @@ class Menu:
                 if not timer[steamid]["style"] == "W-Only":
                     timer[steamid]["style"] = "W-Only"
                     esc.tell(userid,
-                             '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have changed the mode to #tomatoW-Only')
+                             '[Timer] #238,233,233You have changed the mode to #0,250,154W-Only')
                     TimerSolo_Stop(userid)
                     TimerPartner_Stop(userid)
             Menu.mode(userid)
@@ -2897,11 +2889,11 @@ class Menu:
             if player[steamid]["disabled"] == 0:
                 player[steamid]["disabled"] = 1
                 client_pref[steamid]["disabled"] = 1
-                esc.tell(userid, '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have #yellowdisabled #245,61,0timer')
+                esc.tell(userid, '[Timer] #238,233,233You have #yellowdisabled #245,61,0timer')
             else:
                 player[steamid]["disabled"] = 0
                 client_pref[steamid]["disabled"] = 0
-                esc.tell(userid, '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou have #yellowenabled #245,61,0timer')
+                esc.tell(userid, '[Timer] #238,233,233You have #yellowenabled #245,61,0timer')
 
         elif int(choice) == 2:
             if player[steamid]["disabled_keyhint"] == 0:
@@ -2910,7 +2902,7 @@ class Menu:
                 client_pref[steamid]["disabled_keyhint"] = 1
 
                 esc.tell(userid,
-                         '#255,51,0[#0,137,255 Timer #255,51,0] #snowYour #245,61,0keyhint #snowwill no longer be #yellowdisplayed!')
+                         '[Timer] #238,233,233Your #245,61,0keyhint #238,233,233will no longer be #yellowdisplayed!')
 
             elif player[steamid]["disabled_keyhint"] == 1:
 
@@ -2918,14 +2910,14 @@ class Menu:
                 client_pref[steamid]["disabled_keyhint"] = 2
 
                 esc.tell(userid,
-                         '#255,51,0[#0,137,255 Timer #255,51,0] #snowYour #245,61,0keyhint #snowwill only show #yellowspectators')
+                         '[Timer] #238,233,233Your #245,61,0keyhint #238,233,233will only show #yellowspectators')
             else:
 
                 player[steamid]["disabled_keyhint"] = 0
                 client_pref[steamid]["disabled_keyhint"] = 0
 
                 esc.tell(userid,
-                         '#255,51,0[#0,137,255 Timer #255,51,0] #snowYour #245,61,0keyhint #snowwill now #yellowshow!')
+                         '[Timer] #238,233,233Your #245,61,0keyhint #238,233,233will now #yellowshow!')
 
 
 
@@ -2935,53 +2927,53 @@ class Menu:
                 player[steamid]["settings_hudhint"] = 1
                 client_pref[steamid]["settings_hudhint"] = 1
                 esc.tell(userid,
-                         '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou can now see your #245,61,0hudhint #snowagain!')
+                         '[Timer] #238,233,233You can now see your #245,61,0hudhint #238,233,233again!')
             else:
 
                 player[steamid]["settings_hudhint"] = 0
                 client_pref[steamid]["settings_hudhint"] = 0
                 esc.tell(userid,
-                         '#255,51,0[#0,137,255 Timer #255,51,0] #snowYour #245,61,0hudhint #snowwill no longer be #yellowdisplayed!')
+                         '[Timer] #238,233,233Your #245,61,0hudhint #238,233,233will no longer be #yellowdisplayed!')
 
         elif int(choice) == 4:
             if player[steamid]["settings_jumps"] == 0:
                 player[steamid]["settings_jumps"] = 1
                 esc.tell(userid,
-                         '#255,51,0[#0,137,255 Timer #255,51,0] #245,61,0Jumps #snowwill now be displayed in your #yellowhudhint')
+                         '[Timer] #245,61,0Jumps #238,233,233will now be displayed in your #yellowhudhint')
             else:
                 player[steamid]["settings_jumps"] = 0
                 esc.tell(userid,
-                         '#255,51,0[#0,137,255 Timer #255,51,0] #245,61,0Jumps #snowwill no longer be displayed in your #yellowhudhint')
+                         '[Timer] #245,61,0Jumps #238,233,233will no longer be displayed in your #yellowhudhint')
 
         elif int(choice) == 5:
             if player[steamid]["settings_flashbangs"] == 0:
                 player[steamid]["settings_flashbangs"] = 1
                 esc.tell(userid,
-                         '#255,51,0[#0,137,255 Timer #255,51,0] #245,61,0Flashbangs #snowwill now be displayed in your #yellowhudhint')
+                         '[Timer] #245,61,0Flashbangs #238,233,233will now be displayed in your #yellowhudhint')
             else:
                 player[steamid]["settings_flashbangs"] = 0
                 esc.tell(userid,
-                         '#255,51,0[#0,137,255 Timer #255,51,0] #245,61,0Flashbangs #snowwill no longer be displayed in your #yellowhudhint')
+                         '[Timer] #245,61,0Flashbangs #238,233,233will no longer be displayed in your #yellowhudhint')
 
         elif int(choice) == 6:
             if player[steamid]["settings_strafes"] == 0:
                 player[steamid]["settings_strafes"] = 1
                 esc.tell(userid,
-                         '#255,51,0[#0,137,255 Timer #255,51,0] #245,61,0Strafes #snowwill now be displayed in your #yellowhudhint')
+                         '[Timer] #245,61,0Strafes #238,233,233will now be displayed in your #yellowhudhint')
             else:
                 player[steamid]["settings_strafes"] = 0
                 esc.tell(userid,
-                         '#255,51,0[#0,137,255 Timer #255,51,0] #245,61,0Strafes #snowwill no longer be displayed in your #yellowhudhint')
+                         '[Timer] #245,61,0Strafes #238,233,233will no longer be displayed in your #yellowhudhint')
 
         elif int(choice) == 7:
             if player[steamid]["settings_speedmeter"] == 0:
                 player[steamid]["settings_speedmeter"] = 1
                 esc.tell(userid,
-                         '#255,51,0[#0,137,255 Timer #255,51,0] #245,61,0Speedmeter #snowwill now be displayed in your #yellowhudhint')
+                         '[Timer] #245,61,0Speedmeter #238,233,233will now be displayed in your #yellowhudhint')
             else:
                 player[steamid]["settings_speedmeter"] = 0
                 esc.tell(userid,
-                         '#255,51,0[#0,137,255 Timer #255,51,0] #245,61,0Speedmeter #snowwill no longer be displayed in your #yellowhudhint')
+                         '[Timer] #245,61,0Speedmeter #238,233,233will no longer be displayed in your #yellowhudhint')
 
         elif int(choice) == 8:
 
@@ -2991,16 +2983,34 @@ class Menu:
                     player[steamid]["settings_macro"] = 1
                     es.cexec(userid, 'sm_macro')
                     esc.tell(userid,
-                             '#255,51,0[#0,137,255 Timer #255,51,0] #245,61,0Your custom macro has been #yellowenabled!')
+                             '[Timer] #245,61,0Your custom macro has been #yellowenabled!')
                 else:
                     client_pref[steamid]["settings_macro"] = 0
                     player[steamid]["settings_macro"] = 0
                     es.cexec(userid, 'sm_macro')
                     esc.tell(userid,
-                             '#255,51,0[#0,137,255 Timer #255,51,0] #245,61,0Your custom macro has been #yellowdisabled!')
+                             '[Timer] #245,61,0Your custom macro has been #yellowdisabled!')
 
         if choice in (1, 2, 3, 4, 5, 6, 7, 8):
             Menu.settings(userid)
+
+
+    def logs(self, steamid, userid):
+        index = 0
+        logs = popuplib.easymenu(steamid + 'Top', None, None)
+        logs.settitle("Server log\nName | IP")
+
+        logs.c_beginsep = " "
+        logs.c_pagesep = " "
+        logs.enablekeys = "098"
+        partner = mysql.query.fetchall(
+                "SELECT steamid, name, ip FROM stats ORDER BY name")
+
+        for item in partner:
+            logs.addoption(item[0], ("%s: - %s: - %s" % (item[0], item[1], item[2])))
+
+        logs.send(userid)
+
 
 
 Menu = Menu()
@@ -3018,7 +3028,7 @@ class Notify:
             rank = displayRank(steamid, country)
             length = displayLen(country)
             esc.msg(
-                '#255,51,0[#0,137,255 Timer #255,51,0]#245,61,0 %s #snowis ranked#245,0,61 %s #snow/#245,0,61 %s #snowin#245,61,0 %s #snowwith#245,0,61 %s #snowpoints ' % (
+                '[Timer]#245,61,0 %s #238,233,233is ranked#245,0,61 %s #238,233,233/#245,0,61 %s #238,233,233in#245,61,0 %s #238,233,233with#245,0,61 %s #238,233,233points ' % (
                     name, rank, length, country, points))
         else:
             index = 0
@@ -3036,11 +3046,11 @@ class Notify:
                 rank = displayRank(steamid, country)
                 length = displayLen(country)
                 esc.msg(
-                    '#255,51,0[#0,137,255 Timer #255,51,0] #snowPlayer#245,61,0 %s #snowis ranked#245,0,61 %s #snow/#245,0,61 %s #snowin#245,61,0 %s #snowwith#245,0,61 %s #snowpoints ' % (
+                    '[Timer] #238,233,233Player#245,61,0 %s #238,233,233is ranked#245,0,61 %s #238,233,233/#245,0,61 %s #238,233,233in#245,61,0 %s #238,233,233with#245,0,61 %s #238,233,233points ' % (
                         name, rank, length, country, points))
             else:
                 esc.tell(userid,
-                         "#255,51,0[#0,137,255 Timer #255,51,0] #snowCouldn't find player, we tried every possible match and combination.")
+                         "[Timer] #238,233,233Couldn't find player, we tried every possible match and combination.")
 
     def rank(self, userid, text, steamid, name):
         word = text.split(" ")
@@ -3049,7 +3059,7 @@ class Notify:
             rank = displayRank(steamid)
             length = displayLen()
             esc.msg(
-                '#255,51,0[#0,137,255 Timer #255,51,0]#245,61,0 %s #snowis ranked #245,0,61 %s #snow/#245,0,61 %s #snowworldwide with #245,0,61 %s #snowpoints ' % (
+                '[Timer]#245,61,0 %s #238,233,233is ranked #245,0,61 %s #238,233,233/#245,0,61 %s #238,233,233worldwide with #245,0,61 %s #238,233,233points ' % (
                     name, rank, length, points))
         else:
             index = 0
@@ -3067,16 +3077,16 @@ class Notify:
                 rank = displayRank(steamid)
                 length = displayLen()
                 esc.msg(
-                    '#255,51,0[#0,137,255 Timer #255,51,0] #snowPlayer: #245,61,0 %s #snowis ranked#245,0,61 %s #snow/#245,0,61 %s #snowworldwide with#245,0,61 %s #snowpoints ' % (
+                    '[Timer] #238,233,233Player: #245,61,0 %s #238,233,233is ranked#245,0,61 %s #238,233,233/#245,0,61 %s #238,233,233worldwide with#245,0,61 %s #238,233,233points ' % (
                         name, rank, length, points))
             else:
                 esc.tell(userid,
-                         "#255,51,0[#0,137,255 Timer #255,51,0] #snowCouldn't find player, we tried every possible match and combination.")
+                         "[Timer] #238,233,233Couldn't find player, we tried every possible match and combination.")
 
     def Timer_Stop(self, userid):
         TimerPartner_Stop(userid)
         TimerSolo_Stop(userid)
-        esc.tell(userid, '#255,51,0[#0,137,255 Timer #255,51,0] #snowYour timer has been #yellowstopped!')
+        esc.tell(userid, '[Timer] #238,233,233Your timer has been #yellowstopped!')
 
     def challenge_points(self, userid, text, steamid, name):
         map_choose = str(current_map)
@@ -3118,10 +3128,10 @@ class Notify:
         steamid = es.getplayersteamid(userid)
         if CheckPartner(userid):
             esc.tell(userid,
-                     '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou are no longer partnered with#yellow %s' % es.getplayername(
+                     '[Timer] #238,233,233You are no longer partnered with#yellow %s' % es.getplayername(
                          player[steamid]["partner"]))
             esc.tell(player[steamid]["partner"],
-                     '#255,51,0[#0,137,255 Timer #255,51,0] #snowYou are no longer partnered with#yellow %s' % es.getplayername(
+                     '[Timer] #238,233,233You are no longer partnered with#yellow %s' % es.getplayername(
                          userid))
             player[steamid]["partner"] = None
 
@@ -3137,6 +3147,11 @@ class Notify:
 
     def top(self, userid, text, steamid, name):
         Menu.top(steamid, userid)
+
+
+    def logs(self, userid, text, steamid, name):
+        if steamid == "[U:1:42504738]":
+            Menu.logs(steamid, userid)
 
 
 Notify = Notify()
@@ -3203,19 +3218,19 @@ class Tournament:
                         {'steamid': steamid, 'name': name, 'time': position_in_queue * 1800},
                         {'steamid': steamid_partner, 'name': name_partner, 'time': position_in_queue * 1800}]
                     esc.tell(userid,
-                             '#255,51,0[#0,137,255 Tournament #255,51,0] #snowYou have now signed up with#yellow %s #snow(Waiting time is approx: ??)' % es.getplayername(
+                             '#255,51,0[#0,137,255 Tournament #255,51,0] #238,233,233You have now signed up with#yellow %s #238,233,233(Waiting time is approx: ??)' % es.getplayername(
                                  player[steamid]["partner"]))
                     esc.tell(partner_userid,
-                             "#255,51,0[#0,137,255 Tournament #255,51,0] #snowYour partner#yellow %s have just signed up for tournament. Good luck!" % name)
+                             "#255,51,0[#0,137,255 Tournament #255,51,0] #238,233,233Your partner#yellow %s have just signed up for tournament. Good luck!" % name)
                     esc.tell(userid,
                              '#255,51,0[#0,137,255 Tournament #255,51,0] #255,0,0You do not need to be in the server while waiting, just come back when it is your turn!')
                 else:
                     esc.tell(userid,
-                             '#255,51,0[#0,137,255 Tournament #255,51,0] #snowWow! You already registered!. You can register again after you finished your turn!')
+                             '#255,51,0[#0,137,255 Tournament #255,51,0] #238,233,233Wow! You already registered!. You can register again after you finished your turn!')
 
             else:
                 esc.tell(userid,
-                         '#255,51,0[#0,137,255 Tournament #255,51,0] #snowYou need a partner before you can sign up!#')
+                         '#255,51,0[#0,137,255 Tournament #255,51,0] #238,233,233You need a partner before you can sign up!#')
 
     def signup(self, userid, text, steamid, name):
         TSet.register(steamid, userid)
@@ -3237,7 +3252,7 @@ class Tournament:
                             TimerSolo_Stop(userid)
                             TimerPartner_Stop(userid)
                             esc.tell(userid,
-                                     "#255,0,0#255,51,0[#0,137,255 Tournament #255,51,0] #snowYou are not allowed to be here during tournament mode, please consider signing up first using #yellow!register #snowor #yellow!signup")
+                                     "#255,0,0#255,51,0[#0,137,255 Tournament #255,51,0] #238,233,233You are not allowed to be here during tournament mode, please consider signing up first using #yellow!register #238,233,233or #yellow!signup")
 
             else:
                 if "Tournament" in commands:
@@ -3249,7 +3264,7 @@ class Tournament:
                         TimerSolo_Stop(userid)
                         TimerPartner_Stop(userid)
                         esc.tell(userid,
-                                 "#255,0,0#255,51,0[#0,137,255 Tournament #255,51,0] #snowYou are not allowed to be here during tournament mode, please consider signing up first using #yellow!register #snowor #yellow!signup")
+                                 "#255,0,0#255,51,0[#0,137,255 Tournament #255,51,0] #238,233,233You are not allowed to be here during tournament mode, please consider signing up first using #yellow!register #238,233,233or #yellow!signup")
 
     def event(self):
         if len(tournament["queue"]) > 0:
